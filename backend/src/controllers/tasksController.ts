@@ -1,16 +1,31 @@
 import { Request, Response } from 'express';
 import * as taskService from '../services/tasksService';
 
-export const getAllTasks = async (req: Request, res: Response): Promise<void> => {
+export const getAllTasks = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    const tasks = await taskService.getAllTasks();
+    const status = req.query.status as string | undefined;
+
+    if (status && status !== 'pending' && status !== 'completed') {
+      res.status(400).json({ error: 'Status inválido' });
+      return;
+    }
+
+    const tasks = await taskService.getTasksByStatus(
+      status as 'pending' | 'completed' | undefined
+    );
     res.json(tasks);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
 };
 
-export const createTask = async (req: Request, res: Response): Promise<void> => {
+export const createTask = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { title } = req.body;
     const newTask = await taskService.createTask(title);
@@ -20,7 +35,10 @@ export const createTask = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-export const updateTask = async (req: Request, res: Response): Promise<void> => {
+export const updateTask = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { id } = req.params;
     const { title, status } = req.body;
@@ -31,7 +49,10 @@ export const updateTask = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-export const deleteTask = async (req: Request, res: Response): Promise<void> => {
+export const deleteTask = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { id } = req.params;
     await taskService.deleteTask(id);

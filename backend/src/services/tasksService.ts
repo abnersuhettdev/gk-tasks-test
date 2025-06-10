@@ -23,6 +23,18 @@ export async function getAllTasks(): Promise<Task[]> {
   return await readTasks();
 }
 
+export async function getTasksByStatus(
+  status?: 'pending' | 'completed'
+): Promise<Task[]> {
+  const tasks = await readTasks();
+
+  if (!status) {
+    return tasks;
+  }
+
+  return tasks.filter((task) => task.status === status);
+}
+
 export async function createTask(title: string): Promise<Task> {
   if (!title) throw new Error('Título é obrigatório');
 
@@ -30,7 +42,7 @@ export async function createTask(title: string): Promise<Task> {
     id: uuidv4(),
     title,
     status: 'pending',
-    createdAt: format(new Date(), "dd/MM/yyyy"),
+    createdAt: format(new Date(), 'dd/MM/yyyy'),
   };
 
   const tasks = await readTasks();
@@ -40,9 +52,13 @@ export async function createTask(title: string): Promise<Task> {
   return newTask;
 }
 
-export async function updateTask(id: string,title?: string,status?: "pending" | "completed"): Promise<Task> {
+export async function updateTask(
+  id: string,
+  title?: string,
+  status?: 'pending' | 'completed'
+): Promise<Task> {
   const tasks = await readTasks();
-  const task = tasks.find(t => t.id === id);
+  const task = tasks.find((t) => t.id === id);
 
   if (!task) throw new Error('Tarefa não encontrada');
 
@@ -60,7 +76,7 @@ export async function updateTask(id: string,title?: string,status?: "pending" | 
 
 export async function deleteTask(id: string): Promise<void> {
   const tasks = await readTasks();
-  const index = tasks.findIndex(t => t.id === id);
+  const index = tasks.findIndex((t) => t.id === id);
 
   if (index === -1) throw new Error('Tarefa não encontrada');
 
