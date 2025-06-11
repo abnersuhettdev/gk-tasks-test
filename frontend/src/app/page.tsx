@@ -18,6 +18,10 @@ export default function Home() {
   const [task, setTask] = useState<Task>();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [reload, setReload] = useState(false);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: 'success' | 'error';
+  } | null>(null);
   const [statusFilter, setStatusFilter] = useState<
     'pending' | 'completed' | undefined
   >(undefined);
@@ -26,25 +30,64 @@ export default function Home() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const verifyInput = (title: string) => {
+    if (title.trim().length === 0) {
+      showToast('Titulo não pode estar vazio', 'error');
+      return false;
+    }
+
+    return true;
+  };
+
   const onCreate = async (dto: CreateTaskDTO) => {
-    await taskService.create(dto);
-    setReload(true);
+    if (!verifyInput(dto.title)) return;
+
+    try {
+      await taskService.create(dto);
+      setReload(true);
+      showToast('Tarefa criada com sucesso!', 'success');
+    } catch {
+      showToast('Erro ao criar tarefa', 'error');
+    }
+
+    setIsModalOpen(false);
   };
 
   const onEdit = async (dto: UpdateTaskDTO) => {
-    await taskService.update(dto);
-    setReload(true);
+    if (dto.title) {
+      if (!verifyInput(dto.title)) return;
+    }
+
+    try {
+      await taskService.update(dto);
+      setReload(true);
+      showToast('Tarefa atualizada com sucesso!', 'success');
+    } catch {
+      showToast('Erro ao atualizar tarefa', 'error');
+    }
+
+    setIsModalOpen(false);
   };
 
   const onDelete = async (id: string) => {
-    await taskService.remove(id);
-    setReload(true);
+    try {
+      await taskService.remove(id);
+      setReload(true);
+      showToast('Tarefa excluída com sucesso!', 'success');
+    } catch {
+      showToast('Erro ao excluir tarefa', 'error');
+    }
   };
 
   const getAllTasks = async () => {
     const tasks = await taskService.getAll(statusFilter);
 
     setTasks(tasks);
+  };
+
+  const showToast = (message: string, type: 'success' | 'error') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
   };
 
   useEffect(() => {
@@ -152,6 +195,16 @@ export default function Home() {
         isDelete={isDelete}
         task={task}
       />
+
+      {toast && (
+        <div
+          className={`fixed bottom-5 right-5 z-50 px-4 py-3 rounded-md shadow-lg text-white font-medium transition-all duration-300 ${
+            toast.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+          }`}
+        >
+          {toast.message}
+        </div>
+      )}
     </div>
   );
 }

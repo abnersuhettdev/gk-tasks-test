@@ -47,7 +47,6 @@ export const TaskModal: React.FC<CreateTaskModalProps> = ({
 
     setTitle('');
     setStatus('pending');
-    onClose();
   };
 
   if (!isOpen) return null;

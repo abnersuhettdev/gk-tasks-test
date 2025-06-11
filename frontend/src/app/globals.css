@@ -5,6 +5,11 @@
   --foreground: #171717;
 }
 
+#__nextjs__container_errors,
+#__nextjs__container_build_error {
+  display: none !important;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
