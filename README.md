@@ -46,18 +46,26 @@ Este projeto é um Gerenciador de Tarefas simples (CRUD), desenvolvido com tecno
 Editar o arquivo .env.example trocando os valores se necessário
 Ou criar um arquivo .env com as variáveis indicadas no .env.example
 
+### Rodar os comandos:
+
+```bash
 cd backend
 npm install
 npm run dev
+```
 
 ### FrontEnd
 
 Editar o arquivo .env.example trocando os valores se necessário
 Ou criar um arquivo .env com as variáveis indicadas no .env.example
 
+### Rodar os comandos:
+
+```bash
 cd frontend
 npm install
 npm run dev
+```
 
 ## Resumo do fluxo
 
