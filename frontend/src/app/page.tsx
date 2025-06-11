@@ -50,7 +50,7 @@ export default function Home() {
       showToast('Erro ao criar tarefa', 'error');
     }
 
-    setIsModalOpen(false);
+    onClose();
   };
 
   const onEdit = async (dto: UpdateTaskDTO) => {
@@ -66,7 +66,7 @@ export default function Home() {
       showToast('Erro ao atualizar tarefa', 'error');
     }
 
-    setIsModalOpen(false);
+    onClose();
   };
 
   const onDelete = async (id: string) => {
@@ -78,7 +78,7 @@ export default function Home() {
       showToast('Erro ao excluir tarefa', 'error');
     }
 
-    setIsModalOpen(false);
+    onClose();
   };
 
   const getAllTasks = async () => {
@@ -90,6 +90,13 @@ export default function Home() {
   const showToast = (message: string, type: 'success' | 'error') => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
+  };
+
+  const onClose = () => {
+    setIsModalOpen(false);
+    setIsDelete(false);
+    setIsEdit(false);
+    setTask(undefined);
   };
 
   useEffect(() => {
@@ -184,12 +191,7 @@ export default function Home() {
 
       <TaskModal
         isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-          setIsDelete(false);
-          setIsEdit(false);
-          setTask(undefined);
-        }}
+        onClose={onClose}
         onCreate={onCreate}
         onDelete={onDelete}
         onEdit={onEdit}
