@@ -77,6 +77,8 @@ export default function Home() {
     } catch {
       showToast('Erro ao excluir tarefa', 'error');
     }
+
+    setIsModalOpen(false);
   };
 
   const getAllTasks = async () => {
